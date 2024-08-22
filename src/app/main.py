@@ -1,3 +1,4 @@
+import os
 import pickle
 
 from flask import Flask, request, jsonify
@@ -9,15 +10,15 @@ from deep_translator import GoogleTranslator
 from sklearn.linear_model import LinearRegression
 
 
-with open('./models/modelo.sav', 'rb') as f:
+with open('../../models/modelo.sav', 'rb') as f:
     modelo = pickle.load(f)
 
 colunas = ['tamanho', 'ano', 'garagem']
 
 app = Flask(__name__)
 
-app.config['BASIC_AUTH_USERNAME'] = 'julio'
-app.config['BASIC_AUTH_PASSWORD'] = 'alura'
+app.config['BASIC_AUTH_USERNAME'] = os.environ.get('BASIC_AUTH_USERNAME')
+app.config['BASIC_AUTH_PASSWORD'] = os.environ.get('BASIC_AUTH_PASSWORD')
 
 basic_auth = BasicAuth(app)
 
@@ -52,4 +53,4 @@ def cotacao():
 
     return jsonify(preco=preco[0])
 
-app.run(debug=True)
+app.run(debug=True, host='0.0.0.0')
